@@ -4,19 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface PostCardProps {
+  id: string;
   author: string;
-  initials: string;
+  avatarUrl?: string | null;
   time: string;
   content: string;
-  image?: string;
+  image?: string | null;
   likes: number;
   comments: number;
   shares: number;
 }
 
 const PostCard = ({
+  id,
   author,
-  initials,
+  avatarUrl,
   time,
   content,
   image,
@@ -24,15 +26,27 @@ const PostCard = ({
   comments,
   shares,
 }: PostCardProps) => {
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
   return (
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarFallback className="bg-primary/10 text-primary">
-                {initials}
-              </AvatarFallback>
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={author} className="w-full h-full object-cover" />
+              ) : (
+                <AvatarFallback className="bg-primary/10 text-primary">
+                  {getInitials(author)}
+                </AvatarFallback>
+              )}
             </Avatar>
             <div>
               <p className="font-semibold">{author}</p>
