@@ -8,7 +8,11 @@ const Header = () => {
       <div className="flex h-14 items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-primary">FUN Profile</h1>
+          <img 
+            src="/FUN Profile.jpg" 
+            alt="FUN Profile Logo" 
+            className="h-10 object-contain"
+          />
         </div>
 
         {/* Search Bar */}
