@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
+import bnbLogo from "@/assets/bnb.png";
+import usdtLogo from "@/assets/usdt.png";
+import camlyLogo from "@/assets/camly.png";
 
 interface Token {
   symbol: string;
@@ -9,39 +12,34 @@ interface Token {
   balance: string;
   usdValue: string;
   icon: string;
+  contract?: string;
 }
 
 export const AssetsTab = () => {
-  const [network, setNetwork] = useState<"ethereum" | "bsc">("ethereum");
+  const [network, setNetwork] = useState<"ethereum" | "bsc">("bsc");
 
   const tokens: Token[] = [
-    {
-      symbol: "ETH",
-      name: "Ethereum",
-      balance: "0.5234",
-      usdValue: "1,234.56",
-      icon: "⟠",
-    },
     {
       symbol: "BNB",
       name: "BNB Chain",
       balance: "2.1500",
-      usdValue: "543.21",
-      icon: "🔶",
+      usdValue: "650.00",
+      icon: bnbLogo,
     },
     {
       symbol: "USDT",
-      name: "Tether USD",
+      name: "Tether USD (BEP20)",
       balance: "1,000.00",
       usdValue: "1,000.00",
-      icon: "₮",
+      icon: usdtLogo,
     },
     {
-      symbol: "USDC",
-      name: "USD Coin",
-      balance: "500.00",
-      usdValue: "500.00",
-      icon: "💵",
+      symbol: "CAMLY",
+      name: "CAMLY COIN (BEP20)",
+      balance: "50,000.00",
+      usdValue: "2,500.00",
+      icon: camlyLogo,
+      contract: "0x0910320181889fefde0bb1ca63962b0a8882e413",
     },
   ];
 
@@ -70,8 +68,8 @@ export const AssetsTab = () => {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-2xl">
-                  {token.icon}
+                <div className="h-10 w-10 rounded-full bg-background flex items-center justify-center overflow-hidden">
+                  <img src={token.icon} alt={token.symbol} className="h-8 w-8 object-contain" />
                 </div>
                 <div>
                   <p className="font-semibold text-foreground">{token.symbol}</p>
