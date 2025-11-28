@@ -282,13 +282,20 @@ const Profile = () => {
                       key={post.id}
                       id={post.id}
                       author={post.profiles?.username || "Anonymous"}
+                      authorId={post.user_id}
                       avatarUrl={post.profiles?.avatar_url}
                       time={new Date(post.created_at).toLocaleDateString()}
                       content={post.content || ""}
                       image={post.image_url}
+                      mediaUrls={post.media_urls as string[] | null}
+                      privacyLevel={post.privacy_level}
+                      feelingType={post.feeling_type}
+                      feelingText={post.feeling_text}
                       likes={post.reaction_count || 0}
                       comments={post.comment_count || 0}
                       shares={post.share_count || 0}
+                      onDeleted={fetchUserPosts}
+                      onUpdated={fetchUserPosts}
                     />
                   ))
                 )}

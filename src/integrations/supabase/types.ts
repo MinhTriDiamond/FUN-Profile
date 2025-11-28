@@ -136,30 +136,48 @@ export type Database = {
           comment_count: number | null
           content: string | null
           created_at: string
+          feeling_text: string | null
+          feeling_type: string | null
           id: string
           image_url: string | null
+          location_name: string | null
+          media_urls: Json | null
+          privacy_level: string | null
           reaction_count: number | null
           share_count: number | null
+          tagged_users: Json | null
           user_id: string
         }
         Insert: {
           comment_count?: number | null
           content?: string | null
           created_at?: string
+          feeling_text?: string | null
+          feeling_type?: string | null
           id?: string
           image_url?: string | null
+          location_name?: string | null
+          media_urls?: Json | null
+          privacy_level?: string | null
           reaction_count?: number | null
           share_count?: number | null
+          tagged_users?: Json | null
           user_id: string
         }
         Update: {
           comment_count?: number | null
           content?: string | null
           created_at?: string
+          feeling_text?: string | null
+          feeling_type?: string | null
           id?: string
           image_url?: string | null
+          location_name?: string | null
+          media_urls?: Json | null
+          privacy_level?: string | null
           reaction_count?: number | null
           share_count?: number | null
+          tagged_users?: Json | null
           user_id?: string
         }
         Relationships: [

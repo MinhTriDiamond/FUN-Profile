@@ -1,36 +1,61 @@
-import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, MessageCircle, Share2, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import EditPostDialog from "./EditPostDialog";
+import MediaGrid from "./MediaGrid";
 
 interface PostCardProps {
   id: string;
   author: string;
+  authorId: string;
   avatarUrl?: string | null;
   time: string;
   content: string;
   image?: string | null;
+  mediaUrls?: string[] | null;
+  privacyLevel?: string | null;
+  feelingType?: string | null;
+  feelingText?: string | null;
   likes: number;
   comments: number;
   shares: number;
+  onDeleted?: () => void;
+  onUpdated?: () => void;
 }
 
 const PostCard = ({
   id,
   author,
+  authorId,
   avatarUrl,
   time,
   content,
   image,
+  mediaUrls,
+  privacyLevel,
+  feelingType,
+  feelingText,
   likes,
   comments,
   shares,
+  onDeleted,
+  onUpdated,
 }: PostCardProps) => {
   const navigate = useNavigate();
   const { user, isGuest } = useAuth();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const isOwnPost = user?.id === authorId;
 
   const handleInteraction = (action: string) => {
     if (!user || isGuest) {
@@ -60,7 +85,45 @@ const PostCard = ({
       .toUpperCase()
       .slice(0, 2);
   };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const { error } = await supabase
+        .from("posts")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Post deleted successfully",
+      });
+
+      setDeleteDialogOpen(false);
+      onDeleted?.();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Display media URLs or fallback to single image
+  const displayMedia = mediaUrls && mediaUrls.length > 0 ? mediaUrls : (image ? [image] : []);
+  const mediaFiles = displayMedia.map(url => ({
+    file: undefined as any,
+    preview: url,
+    type: url.match(/\.(mp4|webm|mov)$/i) ? "video" as const : "image" as const,
+  }));
+
   return (
+    <>
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
@@ -75,26 +138,48 @@ const PostCard = ({
               )}
             </Avatar>
             <div>
-              <p className="font-semibold text-primary">{author}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-semibold text-primary">{author}</p>
+                {feelingType && feelingText && (
+                  <span className="text-sm text-muted-foreground">
+                    is feeling {feelingType} {feelingText}
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">{time}</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon">
-            <MoreHorizontal className="h-5 w-5" />
-          </Button>
+          
+          {isOwnPost && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setEditDialogOpen(true)}>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit Post
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setDeleteDialogOpen(true)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Post
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <p className="text-sm">{content}</p>
-        {image && (
-          <div className="rounded-lg overflow-hidden">
-            <img
-              src={image}
-              alt="Post content"
-              className="w-full h-auto object-cover"
-            />
-          </div>
+        {content && <p className="text-sm whitespace-pre-wrap">{content}</p>}
+        
+        {mediaFiles.length > 0 && (
+          <MediaGrid mediaFiles={mediaFiles} />
         )}
         
         {/* Engagement Stats */}
@@ -136,6 +221,44 @@ const PostCard = ({
         </div>
       </CardFooter>
     </Card>
+
+    <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete Post</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete this post? This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    <EditPostDialog
+      open={editDialogOpen}
+      onOpenChange={setEditDialogOpen}
+      onPostUpdated={onUpdated}
+      post={{
+        id,
+        content,
+        media_urls: displayMedia,
+        privacy_level: privacyLevel,
+        feeling_type: feelingType,
+        feeling_text: feelingText,
+      }}
+      avatarUrl={avatarUrl || undefined}
+      username={author}
+    />
+  </>
   );
 };
 
