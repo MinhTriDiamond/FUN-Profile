@@ -32,6 +32,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        // Detect password recovery session and redirect
+        if (event === 'PASSWORD_RECOVERY') {
+          window.location.href = '/update-password';
+          return;
+        }
+
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
