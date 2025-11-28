@@ -49,7 +49,6 @@ const Header = () => {
         <div className="flex items-center gap-2">
           {user && !isGuest ? (
             <>
-              <ConnectButton />
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 bg-destructive rounded-full" />
