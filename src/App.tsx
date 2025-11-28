@@ -1,54 +1,58 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { WagmiProvider } from "wagmi";
-import { config } from "@/config/rainbowkit";
 import Index from "./pages/Index";
-import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
-import UpdatePassword from "./pages/UpdatePassword";
 import Wallet from "./pages/Wallet";
-import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
+import UpdatePassword from "./pages/UpdatePassword";
+
+// --- WEB3 IMPORTS (CRITICAL) ---
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultConfig, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
+import { WagmiProvider, http } from 'wagmi';
+import { mainnet, polygon, bsc } from 'wagmi/chains';
+
+// --- POLYFILL FOR BROWSER WALLETS ---
+if (typeof window !== 'undefined') {
+  window.global = window;
+}
+
+// --- WAGMI CONFIGURATION ---
+const config = getDefaultConfig({
+  appName: 'FUN Profile',
+  projectId: 'a7b841b8f0a6b6738697eb77e8962df8', // Project ID của bé
+  chains: [polygon, mainnet, bsc],
+  transports: {
+    [polygon.id]: http(),
+    [mainnet.id]: http(),
+    [bsc.id]: http(),
+  },
+});
+
+const queryClient = new QueryClient();
 
 const App = () => (
   <WagmiProvider config={config}>
-    <RainbowKitProvider>
-      <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <RainbowKitProvider theme={darkTheme()} coolMode>
         <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/wallet" element={<Wallet />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/update-password" element={<UpdatePassword />} />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/wallet" 
-                element={
-                  <ProtectedRoute>
-                    <Wallet />
-                  </ProtectedRoute>
-                } 
-              />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
-      </AuthProvider>
-    </RainbowKitProvider>
+      </RainbowKitProvider>
+    </QueryClientProvider>
   </WagmiProvider>
 );
 
