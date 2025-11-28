@@ -12,10 +12,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import AnimatedLogo from "@/components/AnimatedLogo";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
   const { user, isGuest, signOut } = useAuth();
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
+
+  useEffect(() => {
+    if (user && !isGuest) {
+      const fetchProfile = async () => {
+        const { data } = await supabase
+          .from('profiles')
+          .select('avatar_url')
+          .eq('id', user.id)
+          .single();
+        
+        if (data?.avatar_url) {
+          setAvatarUrl(data.avatar_url);
+        }
+      };
+      fetchProfile();
+    }
+  }, [user, isGuest]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -53,17 +73,23 @@ const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="cursor-pointer h-10 w-10">
-                    <AvatarImage src="" />
+                    <AvatarImage src={avatarUrl} />
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       {user.email?.[0]?.toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => navigate('/profile')}>
+                <DropdownMenuContent align="end" className="bg-card border-border">
+                  <DropdownMenuItem 
+                    onClick={() => navigate('/profile')}
+                    className="text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                  >
                     Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleSignOut}>
+                  <DropdownMenuItem 
+                    onClick={handleSignOut}
+                    className="text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                  >
                     Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
