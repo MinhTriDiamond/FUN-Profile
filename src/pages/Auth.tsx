@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import AnimatedLogo from '@/components/AnimatedLogo';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -125,12 +126,8 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--primary)/0.7)] p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="flex flex-col items-center">
-          <img 
-            src="/FUN_Profile.jpg" 
-            alt="FUN Profile" 
-            className="h-[60px] w-[60px] object-cover rounded-full mb-2"
-          />
-          <CardDescription>Sign in or create an account to continue</CardDescription>
+          <AnimatedLogo size={60} />
+          <CardDescription className="mt-2">Sign in or create an account to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">

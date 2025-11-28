@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import AnimatedLogo from "@/components/AnimatedLogo";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -26,11 +27,7 @@ const Header = () => {
       <div className="flex h-14 items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-          <img 
-            src="/FUN_Profile.jpg" 
-            alt="FUN Profile" 
-            className="h-[60px] w-[60px] object-cover rounded-full"
-          />
+          <AnimatedLogo size={60} />
         </div>
 
         {/* Search Bar */}

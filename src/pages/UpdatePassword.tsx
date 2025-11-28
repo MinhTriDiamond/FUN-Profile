@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff } from 'lucide-react';
+import AnimatedLogo from '@/components/AnimatedLogo';
 
 const UpdatePassword = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -58,12 +59,8 @@ const UpdatePassword = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="flex flex-col items-center">
-          <img 
-            src="/FUN_Profile.jpg" 
-            alt="FUN Profile" 
-            className="h-[60px] w-[60px] object-cover rounded-full mb-2"
-          />
-          <CardTitle>Create New Password</CardTitle>
+          <AnimatedLogo size={60} />
+          <CardTitle className="mt-2">Create New Password</CardTitle>
           <CardDescription>Enter your new password below</CardDescription>
         </CardHeader>
         <CardContent>
