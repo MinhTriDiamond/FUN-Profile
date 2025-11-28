@@ -29,7 +29,7 @@ const Header = () => {
           <img 
             src="/FUN_Profile.jpg" 
             alt="FUN Profile" 
-            className="h-10 w-10 object-cover rounded-full"
+            className="h-15 w-15 object-cover rounded-full"
           />
         </div>
 

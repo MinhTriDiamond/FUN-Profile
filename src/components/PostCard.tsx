@@ -111,26 +111,26 @@ const PostCard = ({
         <div className="flex w-full gap-1">
           <Button 
             variant="ghost" 
-            className="flex-1 gap-2 text-primary [&>svg]:text-primary hover:bg-primary hover:text-white hover:[&>svg]:!text-white"
+            className="flex-1 gap-2 text-primary hover:bg-primary hover:text-white group"
             onClick={() => handleInteraction("like this post")}
           >
-            <ThumbsUp className="h-4 w-4" />
+            <ThumbsUp className="h-4 w-4 text-primary group-hover:!text-white" />
             Like
           </Button>
           <Button 
             variant="ghost" 
-            className="flex-1 gap-2 text-primary [&>svg]:text-primary hover:bg-primary hover:text-white hover:[&>svg]:!text-white"
+            className="flex-1 gap-2 text-primary hover:bg-primary hover:text-white group"
             onClick={() => handleInteraction("comment on this post")}
           >
-            <MessageCircle className="h-4 w-4" />
+            <MessageCircle className="h-4 w-4 text-primary group-hover:!text-white" />
             Comment
           </Button>
           <Button 
             variant="ghost" 
-            className="flex-1 gap-2 text-primary [&>svg]:text-primary hover:bg-primary hover:text-white hover:[&>svg]:!text-white"
+            className="flex-1 gap-2 text-primary hover:bg-primary hover:text-white group"
             onClick={() => handleInteraction("share this post")}
           >
-            <Share2 className="h-4 w-4" />
+            <Share2 className="h-4 w-4 text-primary group-hover:!text-white" />
             Share
           </Button>
         </div>
