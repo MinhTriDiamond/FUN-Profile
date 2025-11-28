@@ -1,4 +1,4 @@
-import { ThumbsUp, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -99,7 +99,7 @@ const PostCard = ({
         
         {/* Engagement Stats */}
         <div className="flex items-center justify-between text-sm text-muted-foreground pt-2">
-          <span>{likes} likes</span>
+          <span>{likes} loves</span>
           <div className="flex gap-3">
             <span>{comments} comments</span>
             <span>{shares} shares</span>
@@ -112,10 +112,10 @@ const PostCard = ({
           <Button 
             variant="ghost" 
             className="flex-1 gap-2 text-primary hover:bg-primary hover:text-white group"
-            onClick={() => handleInteraction("like this post")}
+            onClick={() => handleInteraction("love this post")}
           >
-            <ThumbsUp className="h-4 w-4 text-primary group-hover:!text-white" />
-            Like
+            <Heart className="h-4 w-4 text-primary group-hover:!text-white" />
+            Love
           </Button>
           <Button 
             variant="ghost" 

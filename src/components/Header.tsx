@@ -82,13 +82,13 @@ const Header = () => {
                 <DropdownMenuContent align="end" className="bg-card border-border">
                   <DropdownMenuItem 
                     onClick={() => navigate('/profile')}
-                    className="text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                    className="text-primary hover:!bg-primary hover:!text-white cursor-pointer focus:bg-primary focus:text-white"
                   >
                     Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={handleSignOut}
-                    className="text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                    className="text-primary hover:!bg-primary hover:!text-white cursor-pointer focus:bg-primary focus:text-white"
                   >
                     Sign Out
                   </DropdownMenuItem>
