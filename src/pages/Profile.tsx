@@ -177,122 +177,124 @@ const Profile = () => {
     <div className="min-h-screen bg-feed-bg">
       <Header />
       
-      <div className="flex max-w-7xl mx-auto">
+      <div className="flex">
         <LeftSidebar />
         
-        <main className="flex-1 p-4 space-y-4 max-w-2xl mx-auto ml-60">
-          {/* Profile Header Card */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src={profile.avatar_url || undefined} />
-                    <AvatarFallback className="text-2xl">
-                      {profile.username?.[0]?.toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  
-                  <div>
-                    <h1 className="text-3xl font-bold">{profile.username || 'User'}</h1>
-                    <p className="text-muted-foreground">{user?.email}</p>
-                  </div>
-                </div>
-
-                <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="gap-2">
-                      <Edit size={16} />
-                      Edit Profile
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Edit Profile</DialogTitle>
-                      <DialogDescription>Update your profile information</DialogDescription>
-                    </DialogHeader>
+        <main className="flex-1 ml-60 py-4 px-8">
+          <div className="max-w-2xl mx-auto space-y-4">
+            {/* Profile Header Card */}
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-24 w-24">
+                      <AvatarImage src={profile.avatar_url || undefined} />
+                      <AvatarFallback className="text-2xl">
+                        {profile.username?.[0]?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
                     
-                    <div className="space-y-4 py-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="avatar">Avatar</Label>
-                        <div className="flex items-center gap-4">
-                          <Avatar className="h-16 w-16">
-                            <AvatarImage src={
-                              avatarFile 
-                                ? URL.createObjectURL(avatarFile) 
-                                : profile.avatar_url || undefined
-                            } />
-                            <AvatarFallback>
-                              {editUsername?.[0]?.toUpperCase() || 'U'}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <Input
-                              id="avatar"
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
-                              className="cursor-pointer"
-                            />
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Upload a new profile picture
-                            </p>
+                    <div>
+                      <h1 className="text-3xl font-bold">{profile.username || 'User'}</h1>
+                      <p className="text-muted-foreground">{user?.email}</p>
+                    </div>
+                  </div>
+
+                  <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="gap-2">
+                        <Edit size={16} />
+                        Edit Profile
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Edit Profile</DialogTitle>
+                        <DialogDescription>Update your profile information</DialogDescription>
+                      </DialogHeader>
+                      
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="avatar">Avatar</Label>
+                          <div className="flex items-center gap-4">
+                            <Avatar className="h-16 w-16">
+                              <AvatarImage src={
+                                avatarFile 
+                                  ? URL.createObjectURL(avatarFile) 
+                                  : profile.avatar_url || undefined
+                              } />
+                              <AvatarFallback>
+                                {editUsername?.[0]?.toUpperCase() || 'U'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <Input
+                                id="avatar"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
+                                className="cursor-pointer"
+                              />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Upload a new profile picture
+                              </p>
+                            </div>
                           </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="username">Username</Label>
+                          <Input
+                            id="username"
+                            value={editUsername}
+                            onChange={(e) => setEditUsername(e.target.value)}
+                            placeholder="Enter username"
+                          />
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="username">Username</Label>
-                        <Input
-                          id="username"
-                          value={editUsername}
-                          onChange={(e) => setEditUsername(e.target.value)}
-                          placeholder="Enter username"
-                        />
-                      </div>
-                    </div>
+                      <Button 
+                        onClick={handleSaveProfile} 
+                        disabled={loading || uploading}
+                        className="w-full"
+                      >
+                        {loading || uploading ? 'Saving...' : 'Save Changes'}
+                      </Button>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardContent>
+            </Card>
 
-                    <Button 
-                      onClick={handleSaveProfile} 
-                      disabled={loading || uploading}
-                      className="w-full"
-                    >
-                      {loading || uploading ? 'Saving...' : 'Save Changes'}
-                    </Button>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* User's Posts */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Posts</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {posts.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
-                  No posts yet. Share your first post!
-                </p>
-              ) : (
-                posts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    id={post.id}
-                    author={post.profiles?.username || "Anonymous"}
-                    avatarUrl={post.profiles?.avatar_url}
-                    time={new Date(post.created_at).toLocaleDateString()}
-                    content={post.content || ""}
-                    image={post.image_url}
-                    likes={post.reaction_count || 0}
-                    comments={post.comment_count || 0}
-                    shares={post.share_count || 0}
-                  />
-                ))
-              )}
-            </CardContent>
-          </Card>
+            {/* User's Posts */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Your Posts</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {posts.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">
+                    No posts yet. Share your first post!
+                  </p>
+                ) : (
+                  posts.map((post) => (
+                    <PostCard
+                      key={post.id}
+                      id={post.id}
+                      author={post.profiles?.username || "Anonymous"}
+                      avatarUrl={post.profiles?.avatar_url}
+                      time={new Date(post.created_at).toLocaleDateString()}
+                      content={post.content || ""}
+                      image={post.image_url}
+                      likes={post.reaction_count || 0}
+                      comments={post.comment_count || 0}
+                      shares={post.share_count || 0}
+                    />
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </main>
 
         {/* Right Sidebar - Sticky Honor Board */}
