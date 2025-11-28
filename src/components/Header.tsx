@@ -47,7 +47,7 @@ const Header = () => {
           {user && !isGuest ? (
             <>
               <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5" />
+                <Bell className="h-5 w-5 text-yellow-500" />
                 <span className="absolute top-1 right-1 h-2 w-2 bg-destructive rounded-full" />
               </Button>
               <DropdownMenu>
