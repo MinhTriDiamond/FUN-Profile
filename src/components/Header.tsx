@@ -1,4 +1,4 @@
-import { Search, Bell, Wallet, LogIn } from "lucide-react";
+import { Search, Bell, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -48,10 +49,7 @@ const Header = () => {
         <div className="flex items-center gap-2">
           {user && !isGuest ? (
             <>
-              <Button variant="default" size="sm" className="gap-2">
-                <Wallet className="h-4 w-4" />
-                Connect Wallet
-              </Button>
+              <ConnectButton />
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 bg-destructive rounded-full" />
