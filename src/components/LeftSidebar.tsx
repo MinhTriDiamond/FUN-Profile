@@ -51,9 +51,9 @@ const LeftSidebar = () => {
                 <Button
                   variant="ghost"
                   className={cn(
-                    "w-full justify-start gap-3 px-3 bg-transparent",
+                    "w-full justify-start gap-3 px-3 bg-transparent text-primary",
                     "hover:bg-primary hover:text-primary-foreground",
-                    "[&>svg]:text-accent hover:[&>svg]:text-primary-foreground",
+                    "[&>svg]:text-primary hover:[&>svg]:text-primary-foreground",
                     isActive && "bg-primary text-primary-foreground [&>svg]:text-primary-foreground font-semibold"
                   )}
                 >
@@ -81,9 +81,9 @@ const LeftSidebar = () => {
                   <Button
                     variant="ghost"
                     className={cn(
-                      "w-full justify-start gap-3 px-3 bg-transparent",
+                      "w-full justify-start gap-3 px-3 bg-transparent text-primary",
                       "hover:bg-primary hover:text-primary-foreground",
-                      "[&>svg]:text-accent hover:[&>svg]:text-primary-foreground",
+                      "[&>svg]:text-primary hover:[&>svg]:text-primary-foreground",
                       isActive && "bg-primary text-primary-foreground [&>svg]:text-primary-foreground font-semibold"
                     )}
                   >

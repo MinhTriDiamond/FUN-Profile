@@ -75,7 +75,7 @@ const PostCard = ({
               )}
             </Avatar>
             <div>
-              <p className="font-semibold">{author}</p>
+              <p className="font-semibold text-primary">{author}</p>
               <p className="text-xs text-muted-foreground">{time}</p>
             </div>
           </div>
@@ -111,7 +111,7 @@ const PostCard = ({
         <div className="flex w-full gap-1">
           <Button 
             variant="ghost" 
-            className="flex-1 gap-2 hover:bg-nav-hover"
+            className="flex-1 gap-2 hover:bg-nav-hover text-primary [&>svg]:text-primary"
             onClick={() => handleInteraction("like this post")}
           >
             <ThumbsUp className="h-4 w-4" />
@@ -119,7 +119,7 @@ const PostCard = ({
           </Button>
           <Button 
             variant="ghost" 
-            className="flex-1 gap-2 hover:bg-nav-hover"
+            className="flex-1 gap-2 hover:bg-nav-hover text-primary [&>svg]:text-primary"
             onClick={() => handleInteraction("comment on this post")}
           >
             <MessageCircle className="h-4 w-4" />
@@ -127,7 +127,7 @@ const PostCard = ({
           </Button>
           <Button 
             variant="ghost" 
-            className="flex-1 gap-2 hover:bg-nav-hover"
+            className="flex-1 gap-2 hover:bg-nav-hover text-primary [&>svg]:text-primary"
             onClick={() => handleInteraction("share this post")}
           >
             <Share2 className="h-4 w-4" />
