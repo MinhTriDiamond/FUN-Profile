@@ -180,7 +180,7 @@ const Profile = () => {
       <div className="flex max-w-7xl mx-auto">
         <LeftSidebar />
         
-        <main className="flex-1 p-4 space-y-4">
+        <main className="flex-1 p-4 space-y-4 max-w-2xl mx-auto">
           {/* Profile Header Card */}
           <Card>
             <CardContent className="pt-6">
@@ -262,18 +262,6 @@ const Profile = () => {
                   </DialogContent>
                 </Dialog>
               </div>
-
-              {/* Honor Board */}
-              <div className="mt-6">
-                <HonorBoardCard
-                  totalPosts={profile.total_posts || 0}
-                  totalCommentsReceived={profile.total_comments_received || 0}
-                  totalReactionsReceived={profile.total_reactions_received || 0}
-                  totalSharesReceived={profile.total_shares_received || 0}
-                  friendCount={profile.friend_count || 0}
-                  honorPointsBalance={profile.honor_points_balance || 0}
-                />
-              </div>
             </CardContent>
           </Card>
 
@@ -306,6 +294,18 @@ const Profile = () => {
             </CardContent>
           </Card>
         </main>
+
+        {/* Right Sidebar - Sticky Honor Board */}
+        <aside className="hidden lg:block w-80 p-4 sticky top-20 self-start">
+          <HonorBoardCard
+            totalPosts={profile.total_posts || 0}
+            totalCommentsReceived={profile.total_comments_received || 0}
+            totalReactionsReceived={profile.total_reactions_received || 0}
+            totalSharesReceived={profile.total_shares_received || 0}
+            friendCount={profile.friend_count || 0}
+            honorPointsBalance={profile.honor_points_balance || 0}
+          />
+        </aside>
       </div>
     </div>
   );
