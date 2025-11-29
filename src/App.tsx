@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import Wallet from "./pages/Wallet";
 import Auth from "./pages/Auth";
 import UpdatePassword from "./pages/UpdatePassword";
+import Settings from "./pages/Settings";
 
 // --- WEB3 IMPORTS (CRITICAL) ---
 import '@rainbow-me/rainbowkit/styles.css';
@@ -48,6 +49,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/wallet" element={<Wallet />} />
+                <Route path="/settings" element={<Settings />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/update-password" element={<UpdatePassword />} />
               </Routes>
