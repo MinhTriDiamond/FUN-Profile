@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff } from 'lucide-react';
-import AnimatedLogo from '@/components/AnimatedLogo';
+import AnimatedLogo from '@/components/common/AnimatedLogo';
 
 const UpdatePassword = () => {
   const [newPassword, setNewPassword] = useState('');

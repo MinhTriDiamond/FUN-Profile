@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import AnimatedLogo from "@/components/AnimatedLogo";
+import AnimatedLogo from "@/components/common/AnimatedLogo";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 

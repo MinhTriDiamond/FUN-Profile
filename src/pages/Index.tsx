@@ -3,11 +3,11 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import Header from "@/components/Header";
-import LeftSidebar from "@/components/LeftSidebar";
-import RightSidebar from "@/components/RightSidebar";
-import CreatePost from "@/components/CreatePost";
-import PostCard from "@/components/PostCard";
+import Header from "@/components/layout/Header";
+import LeftSidebar from "@/components/layout/LeftSidebar";
+import RightSidebar from "@/components/layout/RightSidebar";
+import CreatePost from "@/components/feed/CreatePost";
+import PostCard from "@/components/feed/PostCard";
 
 const Index = () => {
   const navigate = useNavigate();

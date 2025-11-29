@@ -10,10 +10,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Edit, Upload, Medal, FileText, Users } from 'lucide-react';
-import Header from '@/components/Header';
-import LeftSidebar from '@/components/LeftSidebar';
-import PostCard from '@/components/PostCard';
-import HonorBoardCard from '@/components/HonorBoardCard';
+import Header from '@/components/layout/Header';
+import LeftSidebar from '@/components/layout/LeftSidebar';
+import PostCard from '@/components/feed/PostCard';
+import HonorBoardCard from '@/components/profile/HonorBoardCard';
 
 const Profile = () => {
   const { user } = useAuth();

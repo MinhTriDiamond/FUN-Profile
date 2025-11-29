@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import AnimatedLogo from '@/components/AnimatedLogo';
+import AnimatedLogo from '@/components/common/AnimatedLogo';
 
 const Auth = () => {
   const navigate = useNavigate();

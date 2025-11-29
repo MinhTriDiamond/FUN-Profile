@@ -5,7 +5,7 @@ import {
   Briefcase, Globe, HomeIcon, Sparkles 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "@/components/NavLink";
+import { NavLink } from "@/components/layout/NavLink";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
