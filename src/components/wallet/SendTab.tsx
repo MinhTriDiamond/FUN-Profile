@@ -11,17 +11,42 @@ import { Badge } from "@/components/ui/badge";
 import { FlyingMoneyAnimation } from "./FlyingMoneyAnimation";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { Heart, CheckCircle } from "lucide-react";
+import { Heart, CheckCircle, AlertCircle } from "lucide-react";
+import { useAccount, useSendTransaction, useWriteContract, useSwitchChain } from "wagmi";
+import { parseUnits } from "viem";
+import { TOKENS } from "@/config/tokens";
+
+const ERC20_ABI = [
+  {
+    inputs: [
+      { name: "recipient", type: "address" },
+      { name: "amount", type: "uint256" }
+    ],
+    name: "transfer",
+    outputs: [{ name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const;
 
 export const SendTab = () => {
   const { user } = useAuth();
-  const [token, setToken] = useState("ETH");
+  const { address, chain } = useAccount();
+  const { switchChain } = useSwitchChain();
+  const { sendTransactionAsync } = useSendTransaction();
+  const { writeContractAsync } = useWriteContract();
+  
+  const [token, setToken] = useState("BNB");
   const [receiver, setReceiver] = useState("");
   const [amount, setAmount] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [receiverName, setReceiverName] = useState("");
+
+  const network = chain?.id === 56 ? 'BSC' : chain?.id === 1 ? 'ETH' : 'BSC';
+  const tokens = TOKENS[network as 'BSC' | 'ETH'] || TOKENS.BSC;
+  const selectedToken = tokens.find(t => t.symbol === token) || tokens[0];
 
   const { data: contacts } = useQuery({
     queryKey: ["wallet_contacts", user?.id],
@@ -74,6 +99,17 @@ export const SendTab = () => {
       toast.error("Please fill in all fields");
       return;
     }
+
+    // Check if on correct network
+    const requiredChainId = network === 'BSC' ? 56 : 1;
+    if (chain?.id !== requiredChainId) {
+      toast.error(`Please switch to ${network} network`);
+      if (switchChain) {
+        switchChain({ chainId: requiredChainId });
+      }
+      return;
+    }
+
     setShowConfirm(true);
   };
 
@@ -81,20 +117,42 @@ export const SendTab = () => {
     setShowConfirm(false);
     setIsSending(true);
 
-    // Simulate blockchain transaction
-    setTimeout(async () => {
-      setIsSending(false);
+    try {
+      const amountValue = parseFloat(amount.replace(/\./g, "").replace(",", "."));
+      const parsedAmount = parseUnits(amountValue.toString(), selectedToken.decimals);
       
+      let txHash = "";
+
+      if (selectedToken.type === 'NATIVE') {
+        // Send native token (BNB or ETH)
+        txHash = await sendTransactionAsync({
+          to: receiver as `0x${string}`,
+          value: parsedAmount,
+        });
+      } else if (selectedToken.address && address && chain) {
+        // Send ERC20/BEP20 token
+        txHash = await writeContractAsync({
+          address: selectedToken.address as `0x${string}`,
+          abi: ERC20_ABI,
+          functionName: "transfer",
+          args: [receiver as `0x${string}`, parsedAmount],
+          account: address,
+          chain,
+        });
+      }
+
       // Save to transaction history
-      if (user?.id) {
+      if (user?.id && txHash) {
         await supabase.from("transactions_history").insert({
           user_id: user.id,
           type: "send",
-          amount: parseFloat(amount.replace(/\./g, "").replace(",", ".")),
-          description: `Sent ${amount} ${token} to ${receiverName || receiver}`,
-          tx_hash: "0x" + Math.random().toString(16).substring(2, 66),
+          amount: amountValue,
+          description: `Sent ${amountValue} ${token} to ${receiverName || receiver}`,
+          tx_hash: txHash,
         });
       }
+
+      setIsSending(false);
 
       // Show success animation
       setShowSuccess(true);
@@ -109,15 +167,32 @@ export const SendTab = () => {
         setShowSuccess(false);
         setReceiver("");
         setAmount("");
-        setToken("ETH");
+        setToken(tokens[0].symbol);
         toast.success("Transaction successful!");
       }, 3000);
-    }, 3000);
+    } catch (error: any) {
+      setIsSending(false);
+      console.error("Transaction error:", error);
+      toast.error(error?.message || "Transaction failed");
+    }
   };
 
   return (
     <>
       <div className="space-y-6">
+        {/* Network Warning */}
+        {chain && ((network === 'BSC' && chain.id !== 56) || (network === 'ETH' && chain.id !== 1)) && (
+          <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-3 flex items-start gap-2">
+            <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-destructive">Wrong Network</p>
+              <p className="text-xs text-destructive/80">
+                Please switch to {network} network to send this token
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Token Selector */}
         <div className="space-y-2">
           <Label>Token</Label>
@@ -126,14 +201,15 @@ export const SendTab = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ETH">ETH - Ethereum</SelectItem>
-              <SelectItem value="BNB">BNB - Binance Coin</SelectItem>
-              <SelectItem value="USDT">USDT - Tether</SelectItem>
-              <SelectItem value="USDC">USDC - USD Coin</SelectItem>
+              {tokens.map((t) => (
+                <SelectItem key={t.symbol} value={t.symbol}>
+                  {t.symbol} - {t.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Badge variant="outline" className="mt-1">
-            Network: {token === "BNB" ? "BSC" : "Ethereum"}
+            Network: {network}
           </Badge>
         </div>
 
@@ -191,7 +267,11 @@ export const SendTab = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Network:</span>
-              <Badge>{token === "BNB" ? "BSC" : "Ethereum"}</Badge>
+              <Badge>{network}</Badge>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Token Type:</span>
+              <Badge variant="outline">{selectedToken.type}</Badge>
             </div>
           </div>
           <Button onClick={handleConfirm} className="w-full" size="lg">
