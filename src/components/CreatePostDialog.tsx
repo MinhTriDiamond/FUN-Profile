@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { X, Image as ImageIcon, Video, Smile, Globe, Users, Loader2 } from "lucide-react";
+import { X, Image as ImageIcon, Video, Smile, Globe, Users, Loader2, Sticker } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import EmojiPicker from "./EmojiPicker";
+import IconStickerPicker from "./IconStickerPicker";
 import MediaGrid from "./MediaGrid";
 import { Progress } from "@/components/ui/progress";
 
@@ -33,7 +34,27 @@ const CreatePostDialog = ({ open, onOpenChange, onPostCreated, avatarUrl, userna
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
+
+  const insertIconAtCursor = (icon: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = content;
+    const before = text.substring(0, start);
+    const after = text.substring(end);
+    
+    setContent(before + icon + after);
+    
+    // Set cursor position after the inserted icon
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = start + icon.length;
+      textarea.focus();
+    }, 0);
+  };
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -268,6 +289,7 @@ const CreatePostDialog = ({ open, onOpenChange, onPostCreated, avatarUrl, userna
 
             {/* Content Textarea */}
             <Textarea
+              ref={textareaRef}
               placeholder={`What's on your mind, ${username || "User"}?`}
               className="min-h-[120px] resize-none border-0 focus-visible:ring-0 text-lg"
               value={content}
@@ -316,6 +338,11 @@ const CreatePostDialog = ({ open, onOpenChange, onPostCreated, avatarUrl, userna
                       <Smile className="h-5 w-5 text-yellow-500" />
                     </Button>
                   </EmojiPicker>
+                  <IconStickerPicker onSelect={insertIconAtCursor} disabled={isPosting}>
+                    <Button variant="ghost" size="sm" disabled={isPosting}>
+                      <Sticker className="h-5 w-5 text-purple-500" />
+                    </Button>
+                  </IconStickerPicker>
                 </div>
               </div>
             </div>
